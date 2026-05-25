@@ -1,0 +1,24 @@
+# Maven
+target/
+*.class
+*.jar
+*.war
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# Logs
+*.log
+logs/
+
+# Environment — NEVER commit secrets
+.env
+.env.*
+application-local.yml
+
+# OS
+.DS_Store
+Thumbs.db

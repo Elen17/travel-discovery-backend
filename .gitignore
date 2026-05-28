@@ -16,7 +16,6 @@ logs/
 
 # Environment — NEVER commit secrets
 .env
-.env.*
 application-local.yml
 
 # OS

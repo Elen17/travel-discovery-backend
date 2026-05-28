@@ -14,7 +14,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate          # Flyway owns the schema — never let Hibernate touch it
+      ddl-auto: validate
     show-sql: false
     properties:
       hibernate:
@@ -27,34 +27,45 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
 
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 2000ms
+
 server:
   port: ${SERVER_PORT:8080}
   error:
     include-message: always
     include-binding-errors: always
 
-# ── JWT ──────────────────────────────────────────────────────────────────────
 jwt:
   secret: ${JWT_SECRET:change-me-in-production-must-be-at-least-256-bits-long-secret-key!!}
-  expiration-ms: ${JWT_EXPIRATION_MS:900000}         # 15 minutes
-  refresh-expiration-ms: ${JWT_REFRESH_MS:604800000} # 7 days
+  expiration-ms: ${JWT_EXPIRATION_MS:1800000}
+  refresh-expiration-ms: ${JWT_REFRESH_MS:604800000}
 
-# ── CORS ─────────────────────────────────────────────────────────────────────
 cors:
   allowed-origins: ${FRONTEND_URL:http://localhost:5173}
 
-# ── RapidAPI (Booking.com hotel data) ────────────────────────────────────────
-# Get your key at https://rapidapi.com → subscribe to booking-com15
 rapidapi:
-  key: ${RAPIDAPI_KEY:your_rapidapi_key_here}
+  key: ${RAPIDAPI_KEY:placeholder_set_in_env}
   host: booking-com15.p.rapidapi.com
   quota:
-    limit: 500  # Free tier = 500 calls/month
+    limit: 500
 
-# ── Logging ──────────────────────────────────────────────────────────────────
+csc:
+  api:
+    base-url: https://api.countrystatecity.in/v1
+    # FIX: Added empty default so app starts without CSC_API_KEY set
+    # (it will fail at runtime only when a location endpoint is called)
+    key: ${CSC_API_KEY:}
+  cache:
+    ttl-seconds: 86400
+
 logging:
   level:
-    com.traveldiscovery: DEBUG
+    com.travel.discovery: DEBUG
     org.springframework.security: INFO
     org.flywaydb: INFO
   file:

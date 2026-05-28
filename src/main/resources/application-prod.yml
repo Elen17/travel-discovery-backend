@@ -5,5 +5,5 @@ spring:
 
 logging:
   level:
-    com.traveldiscovery: INFO
+    com.travel.discovery: INFO
     org.springframework.security: WARN

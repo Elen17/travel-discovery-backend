@@ -64,7 +64,7 @@ API is available at: `http://localhost:8080/api/v1`
 ## Project Structure
 
 ```
-src/main/java/com/traveldiscovery/
+src/main/java/com/travel.discovery/
 ├── config/          # SecurityConfig, JpaConfig
 ├── controller/      # REST controllers
 ├── dto/

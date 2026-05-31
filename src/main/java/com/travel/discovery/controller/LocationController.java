@@ -1,11 +1,12 @@
 package com.travel.discovery.controller;
 
+import com.travel.discovery.dto.response.CityResponse;
+import com.travel.discovery.dto.response.CountryResponse;
 import com.travel.discovery.service.LocationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/locations")
@@ -18,29 +19,20 @@ public class LocationController {
     }
 
     @GetMapping("/countries")
-    public ResponseEntity<List<Map<String, Object>>> getCountries() {
+    public ResponseEntity<List<CountryResponse>> getCountries() {
         return ResponseEntity.ok(locationService.getAllCountries());
     }
 
-    @GetMapping("/countries/{countryCode}/cities")
-    public ResponseEntity<List<Map<String, Object>>> getCitiesByCountry(
-        @PathVariable String countryCode
-    ) {
-        return ResponseEntity.ok(locationService.getCitiesByCountry(countryCode));
+    // [{ id, name, cities: [{ id, name }] }] — every country with its cities
+    @GetMapping("/countries/cities")
+    public ResponseEntity<List<CountryResponse>> getCountriesWithCities() {
+        return ResponseEntity.ok(locationService.getAllCountriesWithCities());
     }
 
-    @GetMapping("/countries/{countryCode}/states")
-    public ResponseEntity<List<Map<String, Object>>> getStatesByCountry(
-        @PathVariable String countryCode
+    @GetMapping("/countries/{countryId}/cities")
+    public ResponseEntity<List<CityResponse>> getCitiesByCountry(
+        @PathVariable Integer countryId
     ) {
-        return ResponseEntity.ok(locationService.getStatesByCountry(countryCode));
-    }
-
-    @GetMapping("/countries/{countryCode}/states/{stateCode}/cities")
-    public ResponseEntity<List<Map<String, Object>>> getCitiesByState(
-        @PathVariable String countryCode,
-        @PathVariable String stateCode
-    ) {
-        return ResponseEntity.ok(locationService.getCitiesByState(countryCode, stateCode));
+        return ResponseEntity.ok(locationService.getCitiesByCountry(countryId));
     }
 }

@@ -7,3 +7,20 @@ logging:
   level:
     com.travel.discovery: INFO
     org.springframework.security: WARN
+
+# Use S3 in production
+storage:
+  provider: s3
+
+aws:
+  s3:
+    region: ${AWS_REGION:us-east-1}
+    bucket: ${AWS_S3_BUCKET}
+    # Leave blank to use the default AWS credential chain (env vars, profile, IAM role)
+    access-key: ${AWS_ACCESS_KEY_ID}
+    secret-key: ${AWS_SECRET_ACCESS_KEY}
+    # Key prefixes: staged uploads live under temp/, confirmed avatars under avatars/
+    temp-prefix: temp/
+    avatar-prefix: avatars/
+    # Optional CDN / custom domain. If blank, the public URL is derived from bucket + region.
+    public-base-url: ${AWS_S3_PUBLIC_URL}

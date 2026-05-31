@@ -9,6 +9,7 @@ import java.time.Instant;
 @Builder
 public class ReviewResponse {
     private Long id;
+    private Long userId;
     private String reviewerName;
     private String reviewerAvatarUrl;
     private Short rating;

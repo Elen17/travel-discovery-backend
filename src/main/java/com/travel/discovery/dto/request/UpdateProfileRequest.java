@@ -9,10 +9,6 @@ public class UpdateProfileRequest {
     @Size(min = 2, max = 100)
     private String fullName;
 
-    private String avatarUrl;
-    private String homeCountry;
-    private String preferredCurrency;
-    private String preferredLanguage;
-    private Boolean notificationBookings;
-    private Boolean notificationInspiration;
+    /** Id of a previously staged image (from POST /me/avatar/temp) to confirm and save as the avatar. */
+    private String avatarTempId;
 }

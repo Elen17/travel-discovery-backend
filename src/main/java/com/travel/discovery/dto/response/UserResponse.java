@@ -12,11 +12,5 @@ public class UserResponse {
     private String fullName;
     private String email;
     private String avatarUrl;
-    private String homeCountry;
-    private String preferredCurrency;
-    private String preferredLanguage;
-    private String role;
-    private Boolean notificationBookings;
-    private Boolean notificationInspiration;
     private Instant createdAt;
 }

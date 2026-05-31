@@ -3,9 +3,7 @@ package com.travel.discovery.controller;
 import com.travel.discovery.dto.request.BookingRequest;
 import com.travel.discovery.dto.response.BookingResponse;
 import com.travel.discovery.dto.response.PageResponse;
-import com.travel.discovery.entity.User;
-import com.travel.discovery.exception.ResourceNotFoundException;
-import com.travel.discovery.repository.UserRepository;
+import com.travel.discovery.security.CurrentUserService;
 import com.travel.discovery.service.BookingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,14 +21,14 @@ import org.springframework.web.bind.annotation.*;
 public class BookingController {
 
     private final BookingService bookingService;
-    private final UserRepository userRepository;
+    private final CurrentUserService currentUserService;
 
     @PostMapping
     public ResponseEntity<BookingResponse> createBooking(
         @AuthenticationPrincipal UserDetails userDetails,
         @Valid @RequestBody BookingRequest request
     ) {
-        Long userId = resolveUserId(userDetails);
+        Long userId = currentUserService.getCurrentUserId(userDetails);
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(bookingService.createBooking(userId, request));
     }
@@ -41,7 +39,7 @@ public class BookingController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size
     ) {
-        Long userId = resolveUserId(userDetails);
+        Long userId = currentUserService.getCurrentUserId(userDetails);
         return ResponseEntity.ok(bookingService.getMyBookings(
             userId, PageRequest.of(page, size, Sort.by("createdAt").descending())
         ));
@@ -52,13 +50,7 @@ public class BookingController {
         @AuthenticationPrincipal UserDetails userDetails,
         @PathVariable Long id
     ) {
-        Long userId = resolveUserId(userDetails);
+        Long userId = currentUserService.getCurrentUserId(userDetails);
         return ResponseEntity.ok(bookingService.cancelBooking(userId, id));
-    }
-
-    private Long resolveUserId(UserDetails userDetails) {
-        return userRepository.findByEmail(userDetails.getUsername())
-            .map(User::getId)
-            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 }

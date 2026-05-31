@@ -24,6 +24,7 @@
         <lombok.version>1.18.30</lombok.version>
         <jjwt.version>0.12.5</jjwt.version>
         <flyway.version>10.10.0</flyway.version>
+        <aws.sdk.version>2.25.45</aws.sdk.version>
     </properties>
 
     <dependencies>
@@ -68,6 +69,13 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
         </dependency>
+        <!-- ── AWS S3 (profile image uploads) ───────────── -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
+            <version>${aws.sdk.version}</version>
+        </dependency>
+
         <!-- ── Database ─────────────────────────────────── -->
         <dependency>
             <groupId>org.postgresql</groupId>

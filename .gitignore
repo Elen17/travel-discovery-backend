@@ -14,6 +14,9 @@ target/
 *.log
 logs/
 
+# Locally-stored profile-image uploads
+uploads/
+
 # Environment — NEVER commit secrets
 .env
 application-local.yml

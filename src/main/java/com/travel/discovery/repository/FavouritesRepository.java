@@ -8,9 +8,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface WishlistRepository extends JpaRepository<Favourites, Long> {
+public interface FavouritesRepository extends JpaRepository<Favourites, Long> {
     List<Favourites> findByUserId(Long userId);
     Optional<Favourites> findByUserIdAndHotelId(Long userId, Long hotelId);
     boolean existsByUserIdAndHotelId(Long userId, Long hotelId);
+
+    // Transaction is provided by FavouritesService (a derived delete needs one).
     void deleteByUserIdAndHotelId(Long userId, Long hotelId);
 }

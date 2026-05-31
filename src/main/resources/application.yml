@@ -2,6 +2,11 @@ spring:
   application:
     name: travel-discovery-backend
 
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 6MB
+
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
@@ -15,7 +20,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-    show-sql: false
+    show-sql: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -31,7 +36,7 @@ spring:
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
-      password: ${REDIS_PASSWORD:}
+      password: ${REDIS_PASSWORD}
       timeout: 2000ms
 
 server:
@@ -45,21 +50,34 @@ jwt:
   expiration-ms: ${JWT_EXPIRATION_MS:1800000}
   refresh-expiration-ms: ${JWT_REFRESH_MS:604800000}
 
+# Privileged ops (e.g. POST /api/v1/admin/cache/reload), guarded by a fixed token
+# sent in the `jwt-token` header and compared against this value.
+admin:
+  reload-token: ${ADMIN_RELOAD_TOKEN:}
+
 cors:
   allowed-origins: ${FRONTEND_URL:http://localhost:5173}
 
+# Profile-image storage. 'local' writes to disk for development (no AWS needed);
+# production overrides this to 's3' in application-prod.yml.
+storage:
+  provider: ${STORAGE_PROVIDER:local}
+  local:
+    directory: ${STORAGE_LOCAL_DIR:uploads}
+    base-url: ${APP_BASE_URL:http://localhost:8080}
+
 rapidapi:
-  key: ${RAPIDAPI_KEY:placeholder_set_in_env}
+  key: ${RAPIDAPI_KEY:}
   host: booking-com15.p.rapidapi.com
   quota:
     limit: 500
+  sync:
+    # Hotels re-synced more recently than this (hours) are not re-fetched/updated,
+    # so repeated searches for the same city don't burn quota.
+    ttl-hours: ${RAPIDAPI_SYNC_TTL_HOURS:24}
 
-csc:
-  api:
-    base-url: https://api.countrystatecity.in/v1
-    # FIX: Added empty default so app starts without CSC_API_KEY set
-    # (it will fail at runtime only when a location endpoint is called)
-    key: ${CSC_API_KEY:}
+# Cache TTL for location reference data (countries / cities) served from the DB
+location:
   cache:
     ttl-seconds: 86400
 

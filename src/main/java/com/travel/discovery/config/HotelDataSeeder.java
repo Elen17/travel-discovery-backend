@@ -6,6 +6,7 @@ import com.travel.discovery.repository.HotelRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -14,6 +15,7 @@ import java.util.Set;
 
 @Slf4j
 @Component
+@Order(1)
 @RequiredArgsConstructor
 public class HotelDataSeeder implements CommandLineRunner {
 
@@ -49,7 +51,7 @@ public class HotelDataSeeder implements CommandLineRunner {
                 "47.3769", "8.5417",
                 Set.of(AmenityType.WIFI, AmenityType.PARKING)),
 
-            hotel("seed-004", "The Shard Hotel London", "London", "UK", 5,
+            hotel("seed-004", "The Shard Hotel London", "London", "United Kingdom", 5,
                 "450.00", 9.5,
                 "https://images.unsplash.com/photo-1548574505-5e239809ee19?w=600",
                 "Breathtaking views of London from one of Europe's tallest buildings.",
@@ -77,7 +79,7 @@ public class HotelDataSeeder implements CommandLineRunner {
                 "52.3676", "4.9041",
                 Set.of(AmenityType.WIFI, AmenityType.RESTAURANT)),
 
-            hotel("seed-008", "Prague Castle View Hotel", "Prague", "Czech Republic", 3,
+            hotel("seed-008", "Prague Castle View Hotel", "Prague", "Czechia (Czech Republic)", 3,
                 "85.00", 7.9,
                 "https://images.unsplash.com/photo-1519677100203-a0e668c92439?w=600",
                 "Affordable comfort hotel with direct views of Prague Castle.",

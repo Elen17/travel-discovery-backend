@@ -1,7 +1,8 @@
 package com.travel.discovery.entity;
 
-import com.travel.discovery.entity.enums.UserRole;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.*;
 
 @Entity
@@ -25,6 +26,4 @@ public class User extends BaseEntity {
     @Column(name = "avatar_url")
     private String avatarUrl;
 
-    @Column(name = "google_id")
-    private String googleId;
 }

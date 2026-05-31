@@ -45,7 +45,7 @@ public class BookingServiceImpl implements BookingService {
             throw new IllegalArgumentException("Check-out must be after check-in");
         }
 
-        BigDecimal totalPrice = hotel.getPricePerNight().multiply(BigDecimal.valueOf(nights));
+        BigDecimal totalPrice = hotel.getPricePerNight().multiply(BigDecimal.valueOf(nights * request.getGuestCount()));
 
         Booking booking = Booking.builder()
             .user(user)

@@ -19,5 +19,9 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     long countByHotelId(Long hotelId);
 
-    boolean existsByUserIdAndHotelId(Long userId, Long hotelId);
+    boolean existsByUserIdAndHotelIdAndId(Long userId, Long hotelId, Long reviewId);
+
+    Optional<Review> findByUserIdAndHotelId(Long userId, Long hotelId);
+
+    void deleteByUserIdAndHotelIdAndId(Long userId, Long hotelId, Long reviewId);
 }

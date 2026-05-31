@@ -98,9 +98,9 @@ src/main/resources/
 | PUT | /api/v1/bookings/:id/cancel | Yes | Cancel booking |
 | GET | /api/v1/users/me | Yes | My profile |
 | PUT | /api/v1/users/me | Yes | Update profile |
-| GET | /api/v1/wishlist | Yes | Get wishlist |
-| POST | /api/v1/wishlist/:hotelId | Yes | Add to wishlist |
-| DELETE | /api/v1/wishlist/:hotelId | Yes | Remove from wishlist |
+| GET | /api/v1/favourites | Yes | Get favourites |
+| POST | /api/v1/favourites/:hotelId | Yes | Add to favourites |
+| DELETE | /api/v1/favourites/:hotelId | Yes | Remove from favourites |
 
 ## Environment Variables
 

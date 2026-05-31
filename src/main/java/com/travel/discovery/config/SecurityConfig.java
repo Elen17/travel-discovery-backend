@@ -45,25 +45,18 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                // Swagger / OpenAPI
+                // Writing a review requires authentication; reading reviews (and all
+                // other hotel endpoints) stays public.
+                .requestMatchers(HttpMethod.POST,   "/api/v1/hotels/*/reviews").authenticated()
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/hotels/*/reviews").authenticated()
+                // Protected: only these controllers require authentication
                 .requestMatchers(
-                    "/swagger-ui.html",
-                    "/swagger-ui/**",
-                    "/v3/api-docs",
-                    "/v3/api-docs/**",
-                    "/swagger-resources/**",
-                    "/webjars/**"
-                ).permitAll()
-                // Auth
-                .requestMatchers("/api/v1/auth/**").permitAll()
-                // Hotels — FIX: controller is /api/v1/hotels (added v1 prefix in HotelController)
-                .requestMatchers(HttpMethod.GET, "/api/v1/hotels/**").permitAll()
-                // Locations — FIX: was missing entirely
-                .requestMatchers(HttpMethod.GET, "/api/v1/locations/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/v1/guides/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/v1/planner/chat").permitAll()
-                // Everything else requires auth
-                .anyRequest().authenticated()
+                    "/api/v1/users/**",
+                    "/api/v1/favourites/**",
+                    "/api/v1/bookings/**"
+                ).authenticated()
+                // Everything else is public (app is usable without authentication)
+                .anyRequest().permitAll()
             )
             .authenticationProvider(authenticationProvider())
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

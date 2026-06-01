@@ -17,14 +17,18 @@ WORKDIR /app
 
 # Non-root user for security
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-USER appuser
 
 COPY --from=build /app/target/*.jar app.jar
 
 # Upload directory (used when STORAGE_PROVIDER=local).
 # No VOLUME instruction: Railway rejects Dockerfile VOLUME and manages
 # persistence via Railway Volumes mounted at /app/uploads instead.
-RUN mkdir -p /app/uploads
+# Create and chown as root before dropping privileges so appuser can write,
+# including when Railway mounts a volume over this path.
+RUN mkdir -p /app/uploads && chown -R appuser:appgroup /app
+
+USER appuser
+
 EXPOSE 8080
 
 ENTRYPOINT ["java", \

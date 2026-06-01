@@ -21,9 +21,10 @@ USER appuser
 
 COPY --from=build /app/target/*.jar app.jar
 
-# Upload volume mount point (used when STORAGE_PROVIDER=local)
-VOLUME ["/app/uploads"]
-
+# Upload directory (used when STORAGE_PROVIDER=local).
+# No VOLUME instruction: Railway rejects Dockerfile VOLUME and manages
+# persistence via Railway Volumes mounted at /app/uploads instead.
+RUN mkdir -p /app/uploads
 EXPOSE 8080
 
 ENTRYPOINT ["java", \

@@ -126,7 +126,7 @@ public class RapidApiHotelService {
                 .city(city)
                 .country(country)
                 .description(description)
-                .starRating(((Number) property.getOrDefault("propertyClass", 3)).shortValue())
+                .starRating(extractStarRating(property))
                 .pricePerNight(price)
                 .mainImageUrl(photoUrls.isEmpty() ? null : photoUrls.get(0))
                 .latitude(toBigDecimal(property.get("latitude")))
@@ -149,6 +149,19 @@ public class RapidApiHotelService {
 
     private BigDecimal toBigDecimal(Object value) {
         return value instanceof Number n ? BigDecimal.valueOf(n.doubleValue()) : null;
+    }
+
+    private static final short DEFAULT_STAR_RATING = 3;
+
+    /**
+     * Booking.com returns {@code propertyClass: 0} for unrated hotels (and the field
+     * may be missing or null). The DB enforces {@code CHECK (star_rating BETWEEN 1 AND 5)},
+     * so anything outside that range is mapped to a neutral default to keep the row valid.
+     */
+    private short extractStarRating(Map<String, Object> property) {
+        Object raw = property.get("propertyClass");
+        short stars = raw instanceof Number n ? n.shortValue() : DEFAULT_STAR_RATING;
+        return (stars < 1 || stars > 5) ? DEFAULT_STAR_RATING : stars;
     }
 
     /**

@@ -15,25 +15,21 @@ FROM eclipse-temurin:17-jre-alpine
 
 WORKDIR /app
 
-# Non-root user for security
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+# Non-root runtime user. su-exec lets the entrypoint drop privileges after it
+# has fixed ownership of the volume mounted at runtime.
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup \
+    && apk add --no-cache su-exec
 
 COPY --from=build /app/target/*.jar app.jar
 
 # Upload directory (used when STORAGE_PROVIDER=local).
 # No VOLUME instruction: Railway rejects Dockerfile VOLUME and manages
 # persistence via Railway Volumes mounted at /app/uploads instead.
-# Create and chown as root before dropping privileges so appuser can write,
-# including when Railway mounts a volume over this path.
 RUN mkdir -p /app/uploads && chown -R appuser:appgroup /app
-
-USER appuser
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", \
-  "-Xms128m", "-Xmx256m", \
-  "-Xss256k", \
-  "-XX:+UseSerialGC", \
-  "-XX:MaxMetaspaceSize=128m", \
-  "-jar", "app.jar"]
+# The container starts as root so the entrypoint can chown the Railway Volume
+# (mounted root-owned at /app/uploads, which masks the build-time chown above),
+# then su-exec drops to appuser so the JVM itself never runs as root.
+ENTRYPOINT ["sh", "-c", "mkdir -p /app/uploads && chown -R appuser:appgroup /app/uploads && exec su-exec appuser:appgroup java -Xms128m -Xmx256m -Xss256k -XX:+UseSerialGC -XX:MaxMetaspaceSize=128m -jar app.jar"]

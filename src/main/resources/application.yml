@@ -40,7 +40,8 @@ spring:
       timeout: 2000ms
 
 server:
-  port: ${SERVER_PORT:8080}
+  # Honor the platform-injected PORT (Railway/Heroku set this), then SERVER_PORT, then 8080.
+  port: ${PORT:${SERVER_PORT:8080}}
   error:
     include-message: always
     include-binding-errors: always

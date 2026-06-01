@@ -17,4 +17,6 @@ public class S3Properties {
     private String avatarPrefix = "avatars/";
     /** Optional CDN / custom domain. If blank, the public URL is derived from bucket + region. */
     private String publicBaseUrl;
+    /** Optional custom endpoint URL — used for local S3-compatible stores (e.g. MinIO). */
+    private String endpointUrl;
 }

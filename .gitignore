@@ -19,6 +19,8 @@ uploads/
 
 # Environment — NEVER commit secrets
 .env
+.env.*
+!.env.example
 application-local.yml
 
 # OS

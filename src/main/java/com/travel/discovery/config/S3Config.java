@@ -11,6 +11,9 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.S3ClientBuilder;
+import software.amazon.awssdk.services.s3.S3Configuration;
+
+import java.net.URI;
 
 @Configuration
 @ConditionalOnProperty(name = "storage.provider", havingValue = "s3")
@@ -29,6 +32,14 @@ public class S3Config {
         if (StringUtils.hasText(props.getAccessKey()) && StringUtils.hasText(props.getSecretKey())) {
             builder.credentialsProvider(StaticCredentialsProvider.create(
                 AwsBasicCredentials.create(props.getAccessKey(), props.getSecretKey())));
+        }
+
+        // Support local S3-compatible stores (e.g. MinIO) via a custom endpoint URL.
+        if (StringUtils.hasText(props.getEndpointUrl())) {
+            builder.endpointOverride(URI.create(props.getEndpointUrl()))
+                   .serviceConfiguration(S3Configuration.builder()
+                       .pathStyleAccessEnabled(true)
+                       .build());
         }
 
         return builder.build();

@@ -66,6 +66,15 @@ storage:
     directory: ${STORAGE_LOCAL_DIR:uploads}
     base-url: ${APP_BASE_URL:http://localhost:8080}
 
+aws:
+  s3:
+    region: ${AWS_REGION:us-east-1}
+    bucket: ${AWS_S3_BUCKET:}
+    access-key: ${AWS_ACCESS_KEY_ID:}
+    secret-key: ${AWS_SECRET_ACCESS_KEY:}
+    public-base-url: ${AWS_S3_PUBLIC_URL:}
+    endpoint-url: ${AWS_S3_ENDPOINT_URL:}
+
 rapidapi:
   key: ${RAPIDAPI_KEY:}
   host: booking-com15.p.rapidapi.com

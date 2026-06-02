@@ -76,8 +76,6 @@ public class ReviewServiceImpl implements ReviewService {
         return ReviewResponse.builder()
             .id(r.getId())
             .userId(r.getUser().getId())
-            .reviewerName(r.getUser().getFullName())
-            .reviewerAvatarUrl(r.getUser().getAvatarUrl())
             .rating(r.getRating())
             .comment(r.getComment())
             .createdAt(r.getCreatedAt())

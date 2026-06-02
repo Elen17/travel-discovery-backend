@@ -12,12 +12,6 @@ import java.time.LocalDate;
 public class BookingResponse {
     private Long id;
     private Long hotelId;
-    private String hotelName;
-    private String hotelCity;
-    private String hotelCountry;
-    private String hotelImageUrl;
-    private BigDecimal hotelLatitude;
-    private BigDecimal hotelLongitude;
     private LocalDate checkIn;
     private LocalDate checkOut;
     private Integer guestCount;

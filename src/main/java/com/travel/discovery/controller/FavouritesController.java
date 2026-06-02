@@ -1,5 +1,6 @@
 package com.travel.discovery.controller;
 
+import com.travel.discovery.dto.response.FavouriteResponse;
 import com.travel.discovery.dto.response.HotelResponse;
 import com.travel.discovery.security.CurrentUserService;
 import com.travel.discovery.service.FavouritesService;
@@ -21,7 +22,7 @@ public class FavouritesController {
     private final CurrentUserService currentUserService;
 
     @GetMapping
-    public ResponseEntity<List<HotelResponse>> getFavourites(
+    public ResponseEntity<List<FavouriteResponse>> getFavourites(
         @AuthenticationPrincipal UserDetails userDetails
     ) {
         Long userId = currentUserService.getCurrentUserId(userDetails);

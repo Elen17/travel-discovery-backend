@@ -1,12 +1,12 @@
 package com.travel.discovery.service.impl;
 
-import com.travel.discovery.dto.response.HotelResponse;
+import com.travel.discovery.dto.response.FavouriteResponse;
 import com.travel.discovery.entity.Favourites;
 import com.travel.discovery.entity.Hotel;
 import com.travel.discovery.entity.User;
 import com.travel.discovery.exception.ConflictException;
 import com.travel.discovery.exception.ResourceNotFoundException;
-import com.travel.discovery.mapper.HotelMapper;
+import com.travel.discovery.mapper.FavouriteMapper;
 import com.travel.discovery.repository.FavouritesRepository;
 import com.travel.discovery.repository.HotelRepository;
 import com.travel.discovery.repository.UserRepository;
@@ -25,12 +25,12 @@ public class FavouritesServiceImpl implements FavouritesService {
     private final FavouritesRepository favouritesRepository;
     private final HotelRepository hotelRepository;
     private final UserRepository userRepository;
-    private final HotelMapper hotelMapper;
+    private final FavouriteMapper favouriteMapper;
 
     @Override
-    public List<HotelResponse> getFavourites(Long userId) {
+    public List<FavouriteResponse> getFavourites(Long userId) {
         return favouritesRepository.findByUserId(userId).stream()
-            .map(favourite -> hotelMapper.toResponse(favourite.getHotel()))
+            .map(favouriteMapper::toResponse)
             .toList();
     }
 

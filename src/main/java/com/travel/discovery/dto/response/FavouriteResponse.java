@@ -7,10 +7,8 @@ import java.time.Instant;
 
 @Data
 @Builder
-public class ReviewResponse {
+public class FavouriteResponse {
     private Long id;
-    private Long userId;
-    private Short rating;
-    private String comment;
+    private Long hotelId;
     private Instant createdAt;
 }

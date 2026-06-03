@@ -3,6 +3,7 @@ package com.travel.discovery.service;
 import com.travel.discovery.entity.Hotel;
 import com.travel.discovery.entity.HotelImage;
 import com.travel.discovery.entity.enums.AmenityType;
+import com.travel.discovery.entity.enums.HotelType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -127,6 +128,8 @@ public class RapidApiHotelService {
                 .country(country)
                 .description(description)
                 .starRating(extractStarRating(property))
+                // searchHotels has no type field; derive it from the accessibility label.
+                .hotelType(HotelType.fromLabel(description))
                 .pricePerNight(price)
                 .mainImageUrl(photoUrls.isEmpty() ? null : photoUrls.get(0))
                 .latitude(toBigDecimal(property.get("latitude")))

@@ -4,6 +4,7 @@ import com.travel.discovery.dto.request.ReviewRequest;
 import com.travel.discovery.dto.response.HotelResponse;
 import com.travel.discovery.dto.response.PageResponse;
 import com.travel.discovery.dto.response.ReviewResponse;
+import com.travel.discovery.entity.enums.HotelType;
 import com.travel.discovery.security.CurrentUserService;
 import com.travel.discovery.service.HotelService;
 import com.travel.discovery.service.HotelWrapperService;
@@ -18,6 +19,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 // FIX: Changed base path from /api/hotels -> /api/v1/hotels
@@ -42,7 +44,9 @@ public class HotelController {
             @RequestParam(defaultValue = "") String checkOut,
             @RequestParam(defaultValue = "1") int adults
     ) {
-        return ResponseEntity.ok(hotelWrapperService.searchHotels(country, city, checkIn, checkOut, adults));
+        return ResponseEntity.ok(
+                hotelWrapperService.searchHotels(country, city, checkIn, checkOut, adults)
+        );
     }
 
     // Full paginated search with filters (used by hotel listing page)
@@ -51,11 +55,14 @@ public class HotelController {
             @RequestParam String country,
             @RequestParam String city,
             @RequestParam(required = false) Integer starRating,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) HotelType type,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "12") int size
     ) {
         return ResponseEntity.ok(hotelService.searchHotels(
-                country, city, starRating,
+                country, city, starRating, minPrice, maxPrice, type,
                 PageRequest.of(page, size, Sort.by("createdAt").descending())
         ));
     }

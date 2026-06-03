@@ -52,7 +52,8 @@ public class HotelWrapperService {
     private long syncTtlHours;
 
     @Transactional
-    public List<HotelResponse> searchHotels(String country, String city, String checkIn, String checkOut, int adults) {
+    public List<HotelResponse> searchHotels(String country, String city,
+                                            String checkIn, String checkOut, int adults) {
         // Reject unknown country/city before doing any work (API call or DB query).
         locationService.validateLocation(country, city);
 
@@ -70,7 +71,7 @@ public class HotelWrapperService {
         }
 
         return hotelRepository
-                .searchHotels(country, city, null, PageRequest.of(0, MAX_SEARCH_RESULTS))
+                .searchHotels(country, city, null, null, null, null, PageRequest.of(0, MAX_SEARCH_RESULTS))
                 .getContent().stream()
                 .map(hotelMapper::toResponse)
                 .toList();
@@ -101,8 +102,8 @@ public class HotelWrapperService {
     /**
      * Inserts new hotels and refreshes stale ones. Existing hotels still within the
      * TTL window are skipped. On refresh only the volatile scalar fields (price,
-     * description, rating, coordinates, main image) are updated; image rows and
-     * user reviews are left intact.
+     * description, rating, type, coordinates, main image) are updated; image rows
+     * and user reviews are left intact.
      */
     private void syncToLocalDb(List<Hotel> hotels) {
         for (Hotel incoming : hotels) {
@@ -121,6 +122,7 @@ public class HotelWrapperService {
             existing.setCountry(incoming.getCountry());
             existing.setDescription(incoming.getDescription());
             existing.setStarRating(incoming.getStarRating());
+            existing.setHotelType(incoming.getHotelType());
             existing.setPricePerNight(incoming.getPricePerNight());
             existing.setLatitude(incoming.getLatitude());
             existing.setLongitude(incoming.getLongitude());

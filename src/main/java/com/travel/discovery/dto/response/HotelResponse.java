@@ -20,6 +20,7 @@ public class HotelResponse {
     private BigDecimal longitude;
     private BigDecimal pricePerNight;
     private Short starRating;
+    private String hotelType;
     private String mainImageUrl;
     private Boolean isFeatured;
     private Set<String> amenities;

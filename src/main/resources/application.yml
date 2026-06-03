@@ -86,6 +86,11 @@ rapidapi:
     # so repeated searches for the same city don't burn quota.
     ttl-hours: ${RAPIDAPI_SYNC_TTL_HOURS:24}
 
+# Extra facility photo URLs (comma-separated) appended to the built-in gallery
+# fallbacks used when a hotel has fewer than 3 of its own images.
+hotel:
+  fallback-photos: ${HOTEL_FALLBACK_PHOTOS:}
+
 # Cache TTL for location reference data (countries / cities) served from the DB
 location:
   cache:

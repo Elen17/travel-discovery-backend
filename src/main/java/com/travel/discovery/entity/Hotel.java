@@ -1,6 +1,7 @@
 package com.travel.discovery.entity;
 
 import com.travel.discovery.entity.enums.AmenityType;
+import com.travel.discovery.entity.enums.HotelType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -46,6 +47,11 @@ public class Hotel extends BaseEntity {
     @Column(name = "star_rating", nullable = false)
     @Builder.Default
     private Short starRating = 3;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "hotel_type", nullable = false, length = 30)
+    @Builder.Default
+    private HotelType hotelType = HotelType.OTHER;
 
     @Column(name = "main_image_url")
     private String mainImageUrl;

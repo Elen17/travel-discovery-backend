@@ -3,6 +3,7 @@ package com.travel.discovery.service.impl;
 import com.travel.discovery.dto.response.HotelResponse;
 import com.travel.discovery.dto.response.PageResponse;
 import com.travel.discovery.entity.Hotel;
+import com.travel.discovery.entity.enums.HotelType;
 import com.travel.discovery.exception.ResourceNotFoundException;
 import com.travel.discovery.repository.HotelRepository;
 import com.travel.discovery.mapper.HotelMapper;
@@ -13,6 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
@@ -25,12 +28,14 @@ public class HotelServiceImpl implements HotelService {
 
     @Override
     public PageResponse<HotelResponse> searchHotels(String country, String city,
-        Integer starRating, Pageable pageable) {
+        Integer starRating, BigDecimal minPrice, BigDecimal maxPrice, HotelType type,
+        Pageable pageable) {
 
         // Reject unknown country/city before querying.
         locationService.validateLocation(country, city);
 
-        Page<Hotel> page = hotelRepository.searchHotels(country, city, starRating, pageable);
+        Page<Hotel> page = hotelRepository.searchHotels(
+            country, city, starRating, minPrice, maxPrice, type, pageable);
 
         return PageResponse.<HotelResponse>builder()
             .content(page.getContent().stream().map(hotelMapper::toResponse).toList())

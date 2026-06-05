@@ -52,8 +52,8 @@ public class HotelController {
     // Full paginated search with filters (used by hotel listing page)
     @GetMapping
     public ResponseEntity<PageResponse<HotelResponse>> getHotels(
-            @RequestParam String country,
-            @RequestParam String city,
+            @RequestParam(required = false) String country,
+            @RequestParam(required = false) String city,
             @RequestParam(required = false) Integer starRating,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,

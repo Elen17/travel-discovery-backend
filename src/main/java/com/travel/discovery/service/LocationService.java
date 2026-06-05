@@ -79,12 +79,14 @@ public class LocationService {
     // silently returning nothing or burning a RapidAPI call).
     // ----------------------------------------------------------------
     public void validateLocation(String country, String city) {
-        if (!StringUtils.hasText(country) || !StringUtils.hasText(city)) {
-            throw new BadRequestException("Both 'country' and 'city' are required");
+        if (!StringUtils.hasText(country)) {
+            return;
         }
+
         Country found = countryRepository.findByNameIgnoreCase(country.trim())
                 .orElseThrow(() -> new BadRequestException("Unknown country: '" + country + "'"));
-        if (!cityRepository.existsByNameIgnoreCaseAndCountryId(city.trim(), found.getId())) {
+        if (StringUtils.hasText(city) &&
+                !cityRepository.existsByNameIgnoreCaseAndCountryId(city.trim(), found.getId())) {
             throw new BadRequestException(
                     "Unknown city '" + city + "' for country '" + country + "'");
         }

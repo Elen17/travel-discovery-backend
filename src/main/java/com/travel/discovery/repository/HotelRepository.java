@@ -1,7 +1,6 @@
 package com.travel.discovery.repository;
 
 import com.travel.discovery.entity.Hotel;
-import com.travel.discovery.entity.enums.HotelType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,7 +25,7 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
               AND (:starRating IS NULL OR h.starRating = :starRating)
               AND (:minPrice IS NULL OR h.pricePerNight >= :minPrice)
               AND (:maxPrice IS NULL OR h.pricePerNight <= :maxPrice)
-              AND (:type IS NULL OR h.hotelType = :type)
+              AND (CAST(:typeName AS string) IS NULL OR LOWER(h.type.name) = LOWER(CAST(:typeName AS string)))
             """)
     Page<Hotel> searchHotels(
             @Param("country") String country,
@@ -34,7 +33,7 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
             @Param("starRating") Integer starRating,
             @Param("minPrice") BigDecimal minPrice,
             @Param("maxPrice") BigDecimal maxPrice,
-            @Param("type") HotelType type,
+            @Param("typeName") String typeName,
             Pageable pageable
     );
 }

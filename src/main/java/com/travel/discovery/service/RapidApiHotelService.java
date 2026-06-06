@@ -2,8 +2,11 @@ package com.travel.discovery.service;
 
 import com.travel.discovery.entity.Hotel;
 import com.travel.discovery.entity.HotelImage;
+import com.travel.discovery.entity.HotelType;
 import com.travel.discovery.entity.enums.AmenityType;
-import com.travel.discovery.entity.enums.HotelType;
+import com.travel.discovery.entity.enums.HotelTypeCategory;
+import com.travel.discovery.repository.HotelTypeRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -30,7 +33,10 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class RapidApiHotelService {
+
+    private final HotelTypeRepository hotelTypeRepository;
 
     @Value("${rapidapi.key}")
     private String apiKey;
@@ -129,7 +135,7 @@ public class RapidApiHotelService {
                 .description(description)
                 .starRating(extractStarRating(property))
                 // searchHotels has no type field; derive it from the accessibility label.
-                .hotelType(HotelType.fromLabel(description))
+                .type(resolveType(description))
                 .pricePerNight(price)
                 .mainImageUrl(photoUrls.isEmpty() ? null : photoUrls.get(0))
                 .latitude(toBigDecimal(property.get("latitude")))
@@ -148,6 +154,18 @@ public class RapidApiHotelService {
                     .build());
         }
         return hotel;
+    }
+
+    /**
+     * Classifies the listing from its label and resolves the matching
+     * {@code hotel_type} row, falling back to "Other" when the category has no
+     * row (it always should, but we never want a null FK to break ingestion).
+     */
+    private HotelType resolveType(String description) {
+        HotelTypeCategory category = HotelTypeCategory.fromLabel(description);
+        return hotelTypeRepository.findByNameIgnoreCase(category.getName())
+                .or(() -> hotelTypeRepository.findByNameIgnoreCase(HotelTypeCategory.OTHER.getName()))
+                .orElse(null);
     }
 
     private BigDecimal toBigDecimal(Object value) {

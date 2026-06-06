@@ -122,7 +122,7 @@ public class HotelWrapperService {
             existing.setCountry(incoming.getCountry());
             existing.setDescription(incoming.getDescription());
             existing.setStarRating(incoming.getStarRating());
-            existing.setHotelType(incoming.getHotelType());
+            existing.setType(incoming.getType());
             existing.setPricePerNight(incoming.getPricePerNight());
             existing.setLatitude(incoming.getLatitude());
             existing.setLongitude(incoming.getLongitude());

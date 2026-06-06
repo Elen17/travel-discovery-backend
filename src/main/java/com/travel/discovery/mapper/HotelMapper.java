@@ -76,7 +76,7 @@ public class HotelMapper {
             .longitude(hotel.getLongitude())
             .pricePerNight(hotel.getPricePerNight())
             .starRating(hotel.getStarRating())
-            .hotelType(hotel.getHotelType() != null ? hotel.getHotelType().name() : null)
+            .hotelType(hotel.getType() != null ? hotel.getType().getName() : null)
             .mainImageUrl(hotel.getMainImageUrl())
             .isFeatured(hotel.getIsFeatured())
             .amenities(hotel.getAmenities().stream().map(Enum::name).collect(Collectors.toSet()))

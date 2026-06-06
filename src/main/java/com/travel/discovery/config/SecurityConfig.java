@@ -45,6 +45,8 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
+                // Admin-only management endpoints.
+                .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                 // Writing a review requires authentication; reading reviews (and all
                 // other hotel endpoints) stays public.
                 .requestMatchers(HttpMethod.POST,   "/api/v1/hotels/*/reviews").authenticated()

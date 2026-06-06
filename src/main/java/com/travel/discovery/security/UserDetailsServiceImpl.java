@@ -22,10 +22,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
 
+        // Spring's hasRole("ADMIN") looks for the authority "ROLE_ADMIN", so prefix
+        // the stored role name ("ADMIN"/"USER"). Fall back to USER if unset.
+        String roleName = user.getRole() != null ? user.getRole().getName().toUpperCase() : "USER";
+
         return new org.springframework.security.core.userdetails.User(
             user.getEmail(),
             user.getPasswordHash() != null ? user.getPasswordHash() : "",
-            List.of(new SimpleGrantedAuthority("ROLE_USER"))
+            List.of(new SimpleGrantedAuthority("ROLE_" + roleName))
         );
     }
 }

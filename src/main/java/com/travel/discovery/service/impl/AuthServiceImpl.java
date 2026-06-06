@@ -5,8 +5,10 @@ import com.travel.discovery.dto.request.RegisterRequest;
 import com.travel.discovery.dto.response.AuthResponse;
 import com.travel.discovery.dto.response.UserResponse;
 import com.travel.discovery.entity.User;
+import com.travel.discovery.entity.enums.UserRole;
 import com.travel.discovery.exception.ConflictException;
 import com.travel.discovery.repository.UserRepository;
+import com.travel.discovery.repository.UserRoleRepository;
 import com.travel.discovery.security.JwtService;
 import com.travel.discovery.security.TokenBlacklistService;
 import com.travel.discovery.service.AuthService;
@@ -26,6 +28,7 @@ import java.util.Date;
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
+    private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -41,6 +44,7 @@ public class AuthServiceImpl implements AuthService {
         User user = User.builder()
             .fullName(request.getFullName())
             .email(request.getEmail())
+            .role(userRoleRepository.getReferenceById(UserRole.USER.getId()))
             .passwordHash(passwordEncoder.encode(request.getPassword()))
             .build();
 

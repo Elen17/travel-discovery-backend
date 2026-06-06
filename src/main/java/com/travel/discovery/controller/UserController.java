@@ -1,14 +1,22 @@
 package com.travel.discovery.controller;
 
+import com.travel.discovery.dto.request.RegisterRequest;
 import com.travel.discovery.dto.request.UpdateProfileRequest;
+import com.travel.discovery.dto.request.UpdateUserRequest;
 import com.travel.discovery.dto.response.AvatarUploadResponse;
+import com.travel.discovery.dto.response.PageResponse;
 import com.travel.discovery.dto.response.UserResponse;
 import com.travel.discovery.entity.User;
+import com.travel.discovery.mapper.UserMapper;
 import com.travel.discovery.repository.UserRepository;
 import com.travel.discovery.security.CurrentUserService;
 import com.travel.discovery.service.StorageService;
+import com.travel.discovery.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,10 +32,12 @@ public class UserController {
     private final UserRepository userRepository;
     private final CurrentUserService currentUserService;
     private final StorageService storageService;
+    private final UserService userService;
+    private final UserMapper userMapper;
 
     @GetMapping("/me")
     public ResponseEntity<UserResponse> getMe(@AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(toResponse(currentUserService.getCurrentUser(userDetails)));
+        return ResponseEntity.ok(userMapper.toResponse(currentUserService.getCurrentUser(userDetails)));
     }
 
     @PutMapping("/me")
@@ -42,7 +52,7 @@ public class UserController {
             // Promote the staged upload: copy temp -> final, delete temp + previous avatar.
             user.setAvatarUrl(storageService.confirmAvatar(request.getAvatarTempId(), user.getAvatarUrl()));
         }
-        return ResponseEntity.ok(toResponse(userRepository.save(user)));
+        return ResponseEntity.ok(userMapper.toResponse(userRepository.save(user)));
     }
 
     /**
@@ -55,15 +65,5 @@ public class UserController {
         @RequestPart("file") MultipartFile file
     ) {
         return ResponseEntity.ok(storageService.stageAvatar(file));
-    }
-
-    private UserResponse toResponse(User user) {
-        return UserResponse.builder()
-            .id(user.getId())
-            .fullName(user.getFullName())
-            .email(user.getEmail())
-            .avatarUrl(user.getAvatarUrl())
-            .createdAt(user.getCreatedAt())
-            .build();
     }
 }

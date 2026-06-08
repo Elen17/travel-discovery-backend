@@ -51,6 +51,12 @@ public class SecurityConfig {
                 // other hotel endpoints) stays public.
                 .requestMatchers(HttpMethod.POST,   "/api/v1/hotels/*/reviews").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/hotels/*/reviews").authenticated()
+                // Persisting a planner message and creating a saved plan require
+                // authentication; reading history and listing plans stay public
+                // (GET /planner/history is used by shared links, GET /planner/plans
+                // returns the caller's plans only when a token is present).
+                .requestMatchers(HttpMethod.POST, "/api/v1/planner/chat").authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/v1/planner/plans").authenticated()
                 // Protected: only these controllers require authentication
                 .requestMatchers(
                     "/api/v1/users/**",

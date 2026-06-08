@@ -13,4 +13,5 @@ public class UserResponse {
     private String email;
     private String avatarUrl;
     private Instant createdAt;
+    private String role;
 }

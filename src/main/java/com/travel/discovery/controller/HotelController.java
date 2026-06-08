@@ -38,8 +38,8 @@ public class HotelController {
     // returns DB-backed hotels (bookable Long id, same shape as the rest of the app).
     @GetMapping("/search")
     public ResponseEntity<List<HotelResponse>> searchHotels(
-            @RequestParam String country,
-            @RequestParam String city,
+            @RequestParam(required = false) String country,
+            @RequestParam(required = false) String city,
             @RequestParam(defaultValue = "") String checkIn,
             @RequestParam(defaultValue = "") String checkOut,
             @RequestParam(defaultValue = "1") int adults
